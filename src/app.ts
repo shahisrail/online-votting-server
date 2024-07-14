@@ -1,27 +1,25 @@
 import cors from 'cors';
-import express, { Application, Request, Response } from 'express';
-const app: Application = express();
-// const port = 3000;
+import express, { Application, NextFunction, Request, Response } from 'express';
+import { UserRoutes } from './modules/user/user.routes';
+import { NormalUserRouter } from './modules/normalUser/nomalUser.route';
+import globalErrorHandler from './app/middlwares/golbalErrorhandler';
+import notFound from './app/middlwares/notfound';
+import router from './app/routes';
 
-// parser
+
+const app: Application = express();
 
 app.use(express.json());
 app.use(cors());
 
-// routes
+app.use("/api/v1",router);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('online votting server is available');
+    res.send('Online voting server is available');
 });
 
-app.all('*', (req, res, next) => {
-    res.status(404).json({
-        success: false,
-        message: 'Route not found',
-    });
-    next();
-});
+app.use(notFound)
+app.use(globalErrorHandler)
 
-// console.log(process.cwd());
 export default app;
